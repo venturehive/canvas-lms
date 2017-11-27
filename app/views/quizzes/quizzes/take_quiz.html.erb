@@ -17,7 +17,15 @@
 <div class="loaded" style="display:none">
   <header class="quiz-header">
     <h1><%= @quiz.quiz_title || @quiz.readable_type %></h1>
-    <% if @submission.preview? %>
+
+  <% if @program_url %>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="window.location='<%= @program_url%>'">Return to Program</button>
+    </div>
+    <br>
+  <% end %>
+
+  <% if @submission.preview? %>
       <% preview_title = @quiz.published? ? t('headers.published_preview',
             "This is a preview of the published version of the quiz") :
             t('headers.draft_preview',
@@ -112,7 +120,18 @@
     </button>
   </div>
 
+<div class=form-actions>
+  <span id="last_saved_indicator"><%= t("not_saved", "Not saved") %></span>
+  <% if @program_url %>
+    <button class="btn btn-secondary" onclick="window.location='<%= @program_url %>'">Return to Program</button>
+    <br>
   <% end %>
+  <button type="submit" class="btn submit_button quiz_submit btn-primary" id="submit_quiz_button" data-action="<%= @quiz_presenter.submit_form_action(session, @current_user) %>">
+  <%= t('buttons.submit_quiz', "Submit Quiz") %>
+  </button>
+</div>
+
+<% end %>
 
   <form id="deauthorized_dialog"
     class="hide"

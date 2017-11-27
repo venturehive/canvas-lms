@@ -228,6 +228,14 @@
   <% end %>
 
   <header class="quiz-header">
+
+    <% if @program_url %>
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="window.location='<%= @program_url%>'">Return to Program</button>
+    </div>
+    <br>
+    <% end %>
+
     <% if submission_has_regrade?(@submission) %>
     <div class="ui-state-warning ui-corner-all pad-box-micro text-center regraded-warning">
       <i class="icon-warning" aria-label="<%= t("labels.warning_icon", "Warning") %>"></i>
@@ -351,5 +359,12 @@
   <% end %>
 
   <div id="module_sequence_footer"></div>
+
+<% if @program_url %> 
+<div class="form-actions"> 
+  <button class="btn btn-secondary" onclick="window.location='<%= @program_url%>'">Return to Program</button>
+  <br>
+</div> 
+<% end %> 
 
 </div>
