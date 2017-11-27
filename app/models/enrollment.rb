@@ -170,42 +170,42 @@ class Enrollment < ActiveRecord::Base
   has_a_broadcast_policy
 
   set_broadcast_policy do |p|
-    p.dispatch :enrollment_invitation
-    p.to { self.user }
-    p.whenever { |record|
-      !record.self_enrolled &&
-      record.course &&
-      record.user.registered? &&
-      !record.observer? &&
-      ((record.invited? && (record.just_created || record.workflow_state_changed?)) || @re_send_confirmation)
-    }
-
-    p.dispatch :enrollment_registration
-    p.to { self.user.communication_channel }
-    p.whenever { |record|
-      !record.self_enrolled &&
-      record.course &&
-      !record.user.registered? &&
-      ((record.invited? && (record.just_created || record.workflow_state_changed?)) || @re_send_confirmation)
-    }
-
-    p.dispatch :enrollment_notification
-    p.to { self.user }
-    p.whenever { |record|
-      !record.self_enrolled &&
-      record.course &&
-      !record.course.created? &&
-      !record.observer? &&
-      record.just_created && record.active?
-    }
-
-    p.dispatch :enrollment_accepted
-    p.to {self.course.participating_admins - [self.user] }
-    p.whenever { |record|
-      record.course &&
-      !record.observer? &&
-      !record.just_created && (record.changed_state(:active, :invited) || record.changed_state(:active, :creation_pending))
-    }
+#    p.dispatch :enrollment_invitation
+#    p.to { self.user }
+#    p.whenever { |record|
+#      !record.self_enrolled &&
+#      record.course &&
+#      record.user.registered? &&
+#      !record.observer? &&
+#      ((record.invited? && (record.just_created || record.workflow_state_changed?)) || @re_send_confirmation)
+#    }
+#
+#    p.dispatch :enrollment_registration
+#    p.to { self.user.communication_channel }
+#    p.whenever { |record|
+#      !record.self_enrolled &&
+#      record.course &&
+#      !record.user.registered? &&
+#      ((record.invited? && (record.just_created || record.workflow_state_changed?)) || @re_send_confirmation)
+#    }
+#
+#    p.dispatch :enrollment_notification
+#    p.to { self.user }
+#    p.whenever { |record|
+#      !record.self_enrolled &&
+#      record.course &&
+#      !record.course.created? &&
+#      !record.observer? &&
+#      record.just_created && record.active?
+#    }
+#
+#    p.dispatch :enrollment_accepted
+#    p.to {self.course.participating_admins - [self.user] }
+#    p.whenever { |record|
+#      record.course &&
+#      !record.observer? &&
+#      !record.just_created && (record.changed_state(:active, :invited) || record.changed_state(:active, :creation_pending))
+#    }
   end
 
   def dispatch_invitations_later

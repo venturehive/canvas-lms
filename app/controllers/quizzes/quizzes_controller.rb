@@ -137,6 +137,14 @@ class Quizzes::QuizzesController < ApplicationController
   end
 
   def show
+    # LRA: NOTE: We only get the program_url value if we enter the quiz area via the take_quiz action from Beekeeper 
+    if params[:program_url] 
+      @program_url = params[:program_url] 
+      session[:program_url] = @program_url 
+    else 
+      @program_url = session[:program_url] 
+    end 
+    # end LRA 
     if @quiz.deleted?
       flash[:error] = t('errors.quiz_deleted', "That quiz has been deleted")
       redirect_to named_context_url(@context, :context_quizzes_url)
@@ -802,6 +810,9 @@ class Quizzes::QuizzesController < ApplicationController
   helper_method :quiz_redirect_params
 
   def start_quiz!
+    # LRA: NOTE: We only have the program_url value is we enter the quiz area from Beekeeper via the take_quiz action. 
+    @program_url = session[:program_url] 
+    # End LRA
     can_retry = @submission && (@quiz.unlimited_attempts? || @submission.attempts_left > 0 || @quiz.grants_right?(@current_user, session, :update))
     preview = params[:preview] && @quiz.grants_right?(@current_user, session, :update)
     if !@submission || @submission.settings_only? || (@submission.completed? && can_retry && !@just_graded) || preview
@@ -827,6 +838,16 @@ class Quizzes::QuizzesController < ApplicationController
 
   def take_quiz
     return unless quiz_submission_active?
+    # LRA: Take the program_url parameter and set in the session so we can use it for our 
+    # various views in the case where we are coming from Beekeeper 
+    # NOTE: This should be the only entry point from Beekeeper in this case 
+    if params[:program_url] 
+      @program_url = params[:program_url] 
+      session[:program_url] = @program_url 
+    else 
+      @program_url = session[:program_url] 
+    end 
+    # end LRA
     @show_embedded_chat = false
     flash[:notice] = t('notices.less_than_allotted_time', "You started this quiz near when it was due, so you won't have the full amount of time to take the quiz.") if @submission.less_than_allotted_time?
     if params[:question_id] && !valid_question?(@submission, params[:question_id])
