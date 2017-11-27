@@ -46,9 +46,7 @@
   <% else %>
     <% js_bundle :file_show %>
     <h2><%= @attachment.display_name %></h2>
-    <span style="font-size: 1.2em;">
-      <%= link_to "Download #{@attachment.display_name}", download_url %>
-    </span> (<%= @attachment.readable_size %>)
+    <!-- LRA: REMOVED FILE DOWNLOAD LINK -->
     <div id="doc_preview" <%= doc_preview_attributes(@attachment) %>></div>
   <% end %>
 <% end %>
